@@ -1,10 +1,7 @@
 package bg.tu_varna.sit.b2.f22621756.XMLfile;
 
 import bg.tu_varna.sit.b2.f22621756.calendar_commands.*;
-import bg.tu_varna.sit.b2.f22621756.main_commands.CloseCommandHandler;
-import bg.tu_varna.sit.b2.f22621756.main_commands.OpenCommandHandler;
-import bg.tu_varna.sit.b2.f22621756.main_commands.SaveAsCommandHandler;
-import bg.tu_varna.sit.b2.f22621756.main_commands.SaveCommandHandler;
+import bg.tu_varna.sit.b2.f22621756.main_commands.*;
 
 import java.util.Scanner;
 

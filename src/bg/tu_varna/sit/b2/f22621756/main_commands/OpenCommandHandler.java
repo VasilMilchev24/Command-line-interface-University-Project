@@ -20,7 +20,7 @@ public class OpenCommandHandler implements CommandHandler {
     private File currentFile;
 
     @Override
-    public void handleCommand(String command) {
+    public String handleCommand(String command) {
         if (command.startsWith("open")) {
             String[] tokens = command.split(" ");
             if (tokens.length != 2) {

@@ -6,47 +6,54 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class SaveAsCommandHandler implements CommandHandler {
-    private CommandHandler successor;
+    private File currentFile;
+    private CommandHandler nextHandler;
 
     @Override
-    public void handleCommand(String command) {
+    public String handleCommand(String command) {
         if (command.startsWith("saveas")) {
-            String[] parts = command.split("\\s+", 2); // Разделяне на командата на две части: "saveas" и пътят към файла
-            if (parts.length == 2) {
-                String filePath = parts[1].replaceAll("\"", ""); // Извличане на пътя към файла
-                saveToFile(filePath); // Запазване на данните в указания файл
-            } else {
-                System.out.println("Грешка: Невалиден формат на командата за saveas.");
+            String[] parts = command.split(" ");
+            if (parts.length != 2) {
+                return "Невалиден формат на командата. Форматът трябва да бъде: saveas \"път_към_файл\"";
             }
+            String filePath = parts[1].replaceAll("\"", ""); // Премахваме кавичките около пътя
+            return saveToFile(filePath);
         } else {
-            if (successor != null) {
-                successor.handleCommand(command);
+            if (nextHandler != null) {
+                return nextHandler.handleCommand(command);
+            } else {
+                return "Не може да се обработи командата: " + command;
             }
+        }
+    }
+
+    private String saveToFile(String filePath) {
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write("Промените са записани успешно.");
+            writer.close();
+            return "Успешно запазихте промените във файл: " + filePath;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Грешка при записване на файл: " + e.getMessage();
         }
     }
 
     @Override
     public void setSuccessor(CommandHandler successor) {
-        this.successor = successor;
+        this.nextHandler = successor;
     }
 
-    private void saveToFile(String filePath) {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            List<String> dataToWrite = prepareDataForWritingFromConsole(); // Получаване на данните за записване
-
-            // Записване на всеки ред от данните във файла
-            for (String line : dataToWrite) {
-                writer.write(line + "\n");
-            }
-            System.out.println("Успешно запазване в " + filePath);
-        } catch (IOException e) {
-            System.out.println("Грешка при записване на файл: " + e.getMessage());
-        }
+    public void setCurrentFile(File file) {
+        this.currentFile = file;
     }
 
-    private List<String> prepareDataForWritingFromConsole() {
-        // Логика за получаване на данните от конзолата и форматиране на XML
-        // Можете да използвате логиката от SaveCommandHandler или да я реализирате отново тук
+    public File getCurrentFile() {
+        return currentFile;
     }
 }
